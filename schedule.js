@@ -142,7 +142,7 @@ function generate_table () {
 function map_schedule () {
     for (const item of data) {
         const col = days.findIndex(day => day === item.day)
-        if (col < 0) {
+        if (col < 0 || !item.start_time) {
             continue
         }
 
