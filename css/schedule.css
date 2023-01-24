@@ -8,3 +8,7 @@
     width: 1%;
     white-space: nowrap;
 }
+
+.cursor-pointer {
+    cursor: pointer;
+}

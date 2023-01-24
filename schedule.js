@@ -54,6 +54,7 @@ function parse_data() {
             day: row[9]?.innerText,
             start_time,
             end_time,
+            node: el
         })
     })
 }
@@ -90,7 +91,9 @@ function generate_table () {
             const item_col = document.createElement('td')
             if (item) {
                 item_col.innerText = item.subject
+                item_col.classList.add('cursor-pointer')
             }
+            item_col.onclick = () => scroll_to_element(item.node)
             row.appendChild(item_col)
         }
         table_body.appendChild(row)
@@ -122,6 +125,14 @@ function map_schedule () {
 function delete_previous_table () {
     const table = document.getElementById('schedule-table')
     table?.remove()
+}
+
+function scroll_to_element(e) {
+    const y = e.getBoundingClientRect().top + window.scrollY - 42
+    window.scroll({
+        top: y,
+        behavior: 'smooth'
+    })
 }
 
 delete_previous_table()
