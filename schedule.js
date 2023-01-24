@@ -3,13 +3,11 @@ String.prototype.replaceAt = function(index, replacement) {
 }
 
 let ROW_HOUR_SCALE = 6
-
 let MINUTES_PER_CREDIT = 50
-
-let CREDIT_TO_SCALE = MINUTES_PER_CREDIT / (60 / ROW_HOUR_SCALE)
-
 let HOUR_START = 7
 let HOUR_END = 18
+
+let CREDIT_TO_SCALE = MINUTES_PER_CREDIT / (60 / ROW_HOUR_SCALE)
 
 // Days to show
 let days = [
@@ -105,7 +103,7 @@ function generate_table () {
         if (i % ROW_HOUR_SCALE === 0) {
             const time_col = document.createElement('td')
             const hour = HOUR_START + Math.floor(i / ROW_HOUR_SCALE)
-            time_col.innerText = `${hour}:00 - ${hour + 1}:00`
+            time_col.innerText = `${zero_pad(hour, 2)}:00 - ${zero_pad(hour + 1, 2)}:00`
             time_col.rowSpan = ROW_HOUR_SCALE
             row.appendChild(time_col)
         }
@@ -193,6 +191,10 @@ function scroll_to_element(e) {
 
 function init_mapping_array () {
     mapping = Array(days.length).fill().map(() => Array((HOUR_END - HOUR_START) * ROW_HOUR_SCALE).fill(null))
+}
+
+function zero_pad(num, places) {
+    return String(num).padStart(places, '0')
 }
 
 init_mapping_array()
