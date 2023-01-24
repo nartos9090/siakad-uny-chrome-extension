@@ -141,15 +141,17 @@ function generate_table () {
 function map_schedule () {
     for (const item of data) {
         const col = days.findIndex(day => day === item.day)
-        if (col < 0 || !item.start_time) {
+        if (col < 0 || !item.start_time || !item.end_time) {
             continue
         }
 
-        let start_hour = (Number(item.start_time.substring(0, 2)) - HOUR_START) * ROW_HOUR_SCALE
-        let start_minute_scale = (Number(item.start_time.substring(3, 5)) * ROW_HOUR_SCALE / 60)
+        let start_hour_minute = parse_time(item.start_time)
+        let start_hour = (start_hour_minute[0] - HOUR_START) * ROW_HOUR_SCALE
+        let start_minute_scale = (start_hour_minute[1] * ROW_HOUR_SCALE / 60)
 
-        let end_hour = (Number(item.end_time.substring(0, 2)) - HOUR_START) * ROW_HOUR_SCALE
-        let end_minute_scale = (Number(item.end_time.substring(3, 5)) * ROW_HOUR_SCALE / 60)
+        let end_hour_minute = parse_time(item.end_time)
+        let end_hour = (end_hour_minute[0] - HOUR_START) * ROW_HOUR_SCALE
+        let end_minute_scale = (end_hour_minute[1] * ROW_HOUR_SCALE / 60)
 
         let row_start = start_hour + start_minute_scale
         let row_end = end_hour + end_minute_scale
@@ -170,6 +172,10 @@ function map_schedule () {
             mapping[col][i] = 1
         }
     }
+}
+
+function parse_time(time_str) {
+    return time_str.split(':').map(Number)
 }
 
 function delete_previous_table () {
