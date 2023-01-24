@@ -24,6 +24,28 @@ let days = [
 
 let data = []
 
+let BACKGROUNDS = [
+    '#C5CAE9',
+    '#C8E6C9',
+    '#F8BBD0',
+    '#E1BEE7',
+    '#FFCDD2',
+    '#BBDEFB',
+    '#B3E5FC',
+    '#B2EBF2',
+    '#F0F4C3',
+    '#D7CCC8',
+    '#D1C4E9',
+    '#B2DFDB',
+    '#DCEDC8',
+    '#FFF9C4',
+    '#FFECB3',
+    '#F5F5F5',
+    '#FFCCBC',
+    '#FFE0B2',
+    '#CFD8DC',
+]
+
 let mapping = Array(days.length).fill().map(() => Array((HOUR_END - HOUR_START) * ROW_HOUR_SCALE).fill(null))
 
 function parse_data() {
@@ -37,6 +59,7 @@ function parse_data() {
             [start_time, end_time] = time.split('-').map(time => time.trim().substring(0, 5).replaceAt(4, '0'))
         }
         data.push({
+            index: Number(row[0]?.innerText),
             code: row[1]?.innerText,
             subject: row[2]?.innerText,
             semester: Number(row[3]?.innerText),
@@ -101,6 +124,7 @@ function generate_table () {
                 item_col.rowSpan = item.row_span
                 item_col.classList.add('schedule-item')
                 item_col.innerHTML = `<div>${item.subject}</div><div>${item.start_time} - ${item.end_time}</div>`
+                item_col.style.backgroundColor = BACKGROUNDS[item.index - 1]
                 row.appendChild(item_col)
             }
         })
