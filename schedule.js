@@ -46,7 +46,7 @@ let BACKGROUNDS = [
     '#CFD8DC',
 ]
 
-let mapping = Array(days.length).fill().map(() => Array((HOUR_END - HOUR_START) * ROW_HOUR_SCALE).fill(null))
+let mapping
 
 function parse_data() {
     const rows = [...document.querySelectorAll('#dashboard table.table-hover tbody tr')]
@@ -145,16 +145,28 @@ function map_schedule () {
             continue
         }
 
-        const hour = (Number(item.start_time.substring(0, 2)) - HOUR_START) * ROW_HOUR_SCALE
-        const minute_scale = (Number(item.start_time.substring(3, 5)) * ROW_HOUR_SCALE / 60)
+        let start_hour = (Number(item.start_time.substring(0, 2)) - HOUR_START) * ROW_HOUR_SCALE
+        let start_minute_scale = (Number(item.start_time.substring(3, 5)) * ROW_HOUR_SCALE / 60)
 
-        const row_start = hour + minute_scale
-        const row_end = item.credit * (item.type === 'Praktik' ? 2 : 1) * CREDIT_TO_SCALE
+        let end_hour = (Number(item.end_time.substring(0, 2)) - HOUR_START) * ROW_HOUR_SCALE
+        let end_minute_scale = (Number(item.end_time.substring(3, 5)) * ROW_HOUR_SCALE / 60)
 
-        item.row_span = row_end
+        let row_start = start_hour + start_minute_scale
+        let row_end = end_hour + end_minute_scale
+
+        if (row_start < 0) {
+            if (row_end > 0) {
+                row_start = 0
+            } else {
+                 continue
+            }
+        }
+
+
+        item.row_span = row_end - row_start
 
         mapping[col][row_start] = item
-        for (let i = row_start + 1; i < row_start + row_end; i++) {
+        for (let i = row_start + 1; i < row_end; i++) {
             mapping[col][i] = 1
         }
     }
@@ -173,6 +185,11 @@ function scroll_to_element(e) {
     })
 }
 
+function init_mapping_array () {
+    mapping = Array(days.length).fill().map(() => Array((HOUR_END - HOUR_START) * ROW_HOUR_SCALE).fill(null))
+}
+
+init_mapping_array()
 delete_previous_table()
 parse_data()
 map_schedule()
@@ -180,6 +197,7 @@ generate_table()
 
 function refresh() {
     delete_previous_table()
+    init_mapping_array()
     parse_data()
     map_schedule()
     generate_table()
