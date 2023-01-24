@@ -9,6 +9,14 @@
     white-space: nowrap;
 }
 
+#schedule-table tr td {
+    padding: 4px;
+}
+
+#schedule-table td.empty-item {
+    background-color: #ddd;
+}
+
 .cursor-pointer {
     cursor: pointer;
 }
