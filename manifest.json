@@ -10,5 +10,6 @@
             "run_at": "document_end"
         }
     ],
-    "host_permissions": ["<all_urls>"]
+    "host_permissions": ["<all_urls>"],
+    "description": "An extension for Siakad UNY. It can show schedule display."
 }
