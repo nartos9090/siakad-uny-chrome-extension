@@ -123,7 +123,7 @@ function generate_table () {
                 item_col.rowSpan = item.row_span
                 item_col.classList.add('schedule-item')
                 item_col.innerHTML = `<div>${item.subject}</div><div>${item.start_time} - ${item.end_time}</div>`
-                item_col.style.backgroundColor = BACKGROUNDS[item.index - 1]
+                item_col.style.backgroundColor = BACKGROUNDS[(item.index - 1) % BACKGROUNDS.length]
                 row.appendChild(item_col)
             }
         })
