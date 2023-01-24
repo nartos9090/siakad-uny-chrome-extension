@@ -2,20 +2,14 @@ String.prototype.replaceAt = function(index, replacement) {
     return this.substring(0, index) + replacement + this.substring(index + replacement.length);
 }
 
-let lesson_hours = [
-    ['07:30', '08:20'],
-    ['08:21', '09:10'],
-    ['09:11', '10:00'],
-    ['10:01', '10:50'],
-    ['10:51', '11:40'],
-    ['11:41', '12:30'],
-    ['12:31', '13:20'],
-    ['13:21', '14:10'],
-    ['14:11', '15:00'],
-    ['15:01', '15:50'],
-    ['15:51', '16:40'],
-    ['16:41', '17:30'],
-]
+let ROW_HOUR_SCALE = 6
+
+let MINUTES_PER_CREDIT = 50
+
+let CREDIT_TO_SCALE = MINUTES_PER_CREDIT / (60 / ROW_HOUR_SCALE)
+
+let HOUR_START = 7
+let HOUR_END = 18
 
 // Days to show
 let days = [
@@ -30,7 +24,7 @@ let days = [
 
 let data = []
 
-let mapping = Array(days.length).fill().map(() => Array(lesson_hours.length).fill(null))
+let mapping = Array(days.length).fill().map(() => Array((HOUR_END - HOUR_START) * ROW_HOUR_SCALE).fill(null))
 
 function parse_data() {
     const rows = [...document.querySelectorAll('#dashboard table.table-hover tbody tr')]
@@ -40,7 +34,7 @@ function parse_data() {
         const time = row[10]?.innerText
         let start_time, end_time
         if (time) {
-            [start_time, end_time] = time.split('-').map(time => time.trim().substring(0, 5))
+            [start_time, end_time] = time.split('-').map(time => time.trim().substring(0, 5).replaceAt(4, '0'))
         }
         data.push({
             code: row[1]?.innerText,
@@ -81,23 +75,36 @@ function generate_table () {
     // Create table body
     const table_body = document.createElement('tbody')
     // Insert table row
-    lesson_hours.forEach((lesson_hour, i) => {
+
+    for (let i = 0; i < (HOUR_END - HOUR_START) * ROW_HOUR_SCALE; i++) {
         const row = document.createElement('tr')
-        const time_col = document.createElement('td')
-        time_col.innerText = lesson_hour.join(' - ')
-        row.appendChild(time_col)
-        for (let j = 0; j < days.length; j++) {
-            const item = mapping[j][i]
-            const item_col = document.createElement('td')
-            if (item) {
-                item_col.innerText = item.subject
-                item_col.classList.add('cursor-pointer')
-            }
-            item_col.onclick = () => scroll_to_element(item.node)
-            row.appendChild(item_col)
+        
+        // Time column
+        if (i % ROW_HOUR_SCALE === 0) {
+            const time_col = document.createElement('td')
+            const hour = HOUR_START + Math.floor(i / ROW_HOUR_SCALE)
+            time_col.innerText = `${hour}:00 - ${hour + 1}:00`
+            time_col.rowSpan = ROW_HOUR_SCALE
+            row.appendChild(time_col)
         }
+
+        days.forEach((day, j) => {
+            const item = mapping[j][i]
+            if (!item) {
+                const item_col = document.createElement('td')
+                item_col.classList.add('empty-item')
+                row.appendChild(item_col)
+            } else if (item !== 1) {
+                const item_col = document.createElement('td')
+                item_col.rowSpan = item.row_span
+                item_col.classList.add('schedule-item')
+                item_col.innerHTML = `<div>${item.subject}</div><div>${item.start_time} - ${item.end_time}</div>`
+                row.appendChild(item_col)
+            }
+        })
         table_body.appendChild(row)
-    })
+    }
+
     table.appendChild(table_body)
     
     // Install table to html
@@ -112,12 +119,18 @@ function map_schedule () {
         if (col < 0) {
             continue
         }
-        let row_start, row_end
-        row_start = lesson_hours.findIndex(lesson_hour => lesson_hour[0] === item.start_time)
-        row_end = row_start + (item.credit * (item.type === 'Praktik' ? 2 : 1) - 1)
 
-        for (let i = row_start; i <= row_end; i++) {
-            mapping[col][i] = item
+        const hour = (Number(item.start_time.substring(0, 2)) - HOUR_START) * ROW_HOUR_SCALE
+        const minute_scale = (Number(item.start_time.substring(3, 5)) * ROW_HOUR_SCALE / 60)
+
+        const row_start = hour + minute_scale
+        const row_end = item.credit * (item.type === 'Praktik' ? 2 : 1) * CREDIT_TO_SCALE
+
+        item.row_span = row_end
+
+        mapping[col][row_start] = item
+        for (let i = row_start + 1; i < row_start + row_end; i++) {
+            mapping[col][i] = 1
         }
     }
 }
