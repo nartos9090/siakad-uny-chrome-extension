@@ -4,17 +4,17 @@ String.prototype.replaceAt = function(index, replacement) {
 
 let lesson_hours = [
     ['07:30', '08:20'],
-    ['08:20', '09:10'],
-    ['09:10', '10:00'],
-    ['10:00', '10:50'],
-    ['10:50', '11:40'],
-    ['11:40', '12:30'],
-    ['12:30', '13:20'],
-    ['13:20', '14:10'],
-    ['14:10', '15:00'],
-    ['15:00', '15:50'],
-    ['15:50', '16:40'],
-    ['16:40', '17:30'],
+    ['08:21', '09:10'],
+    ['09:11', '10:00'],
+    ['10:01', '10:50'],
+    ['10:51', '11:40'],
+    ['11:41', '12:30'],
+    ['12:31', '13:20'],
+    ['13:21', '14:10'],
+    ['14:11', '15:00'],
+    ['15:01', '15:50'],
+    ['15:51', '16:40'],
+    ['16:41', '17:30'],
 ]
 
 // Days to show
@@ -40,7 +40,7 @@ function parse_data() {
         const time = row[10]?.innerText
         let start_time, end_time
         if (time) {
-            [start_time, end_time] = time.split('-').map(time => time.trim().substring(0, 5).replaceAt(4, '0'))
+            [start_time, end_time] = time.split('-').map(time => time.trim().substring(0, 5))
         }
         data.push({
             code: row[1]?.innerText,
@@ -110,15 +110,8 @@ function map_schedule () {
             continue
         }
         let row_start, row_end
-        for (let i = 0; i < lesson_hours.length; i++) {
-            const lesson_hour = lesson_hours[i]
-            if (lesson_hour[0] === item.start_time) {
-                row_start = i
-            } else if (lesson_hour[1] === item.end_time) {
-                row_end = i
-                break
-            }
-        }
+        row_start = lesson_hours.findIndex(lesson_hour => lesson_hour[0] === item.start_time)
+        row_end = row_start + (item.credit * (item.type === 'Praktik' ? 2 : 1) - 1)
 
         for (let i = row_start; i <= row_end; i++) {
             mapping[col][i] = item
