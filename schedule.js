@@ -98,7 +98,6 @@ function generate_table () {
     // Create table body
     const table_body = document.createElement('tbody')
     // Insert table row
-
     for (let i = 0; i < (HOUR_END - HOUR_START) * ROW_HOUR_SCALE; i++) {
         const row = document.createElement('tr')
         
@@ -115,7 +114,7 @@ function generate_table () {
             const item = mapping[j][i]
             if (!item) {
                 const item_col = document.createElement('td')
-                if (i % ROW_HOUR_SCALE !== 0) {
+                if (i % ROW_HOUR_SCALE !== 0 &&  mapping[j][i - 1] !== 1) {
                     item_col.classList.add('disable-border')
                 }
                 row.appendChild(item_col)
