@@ -4,7 +4,7 @@
 * Schedule display in KRS menu
 
 ### How to use
-* Download the release zip and extract
+* Download the release zip [here](https://github.com/nartos9090/siakad-uny-chrome-extension/releases/tag/latest) and extract
 * Open Extension setting [chrome://extensions](chrome://extensions) or [edge://extensions](edge://extensions) for Microsoft Edge
 * Enable developer mode on the top right
-* Click *Load unpacked*, select the folder where the zip was extracted
+* Click *Load unpacked* on the top left, select the folder where the zip was extracted
