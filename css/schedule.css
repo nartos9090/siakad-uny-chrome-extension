@@ -13,8 +13,8 @@
     padding: 4px;
 }
 
-#schedule-table td.empty-item {
-    background-color: #ddd;
+#schedule-table td.disable-border {
+    border-top: none;
 }
 
 .cursor-pointer {

@@ -92,7 +92,9 @@ function generate_table () {
             const item = mapping[j][i]
             if (!item) {
                 const item_col = document.createElement('td')
-                item_col.classList.add('empty-item')
+                if (i % ROW_HOUR_SCALE !== 0) {
+                    item_col.classList.add('disable-border')
+                }
                 row.appendChild(item_col)
             } else if (item !== 1) {
                 const item_col = document.createElement('td')
