@@ -1,0 +1,14 @@
+{
+    "name": "Siakad UNY Plugin",
+    "version": "1.0",
+    "manifest_version": 3,
+    "content_scripts": [
+        {
+            "matches": ["*://siakad2013.uny.ac.id/krs/masuk"],
+            "js": ["schedule.js"],
+            "css": ["css/schedule.css"],
+            "run_at": "document_end"
+        }
+    ],
+    "host_permissions": ["<all_urls>"]
+}

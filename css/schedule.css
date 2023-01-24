@@ -1,0 +1,10 @@
+#schedule-table td,
+#schedule-table th {
+    text-align: center !important;
+    vertical-align: middle !important;
+}
+
+#schedule-table tr td:first-child {
+    width: 1%;
+    white-space: nowrap;
+}
