@@ -75,9 +75,11 @@ function parse_data() {
 }
 
 function generate_table () {
+    const div = document.createElement('div')
+    div.id = 'schedule-table'
+
     const table = document.createElement('table')
     table.classList.add('table', 'table-bordered')
-    table.id = 'schedule-table'
     table.style.marginTop = '12px'
 
     // Create table head
@@ -130,11 +132,12 @@ function generate_table () {
     }
 
     table.appendChild(table_body)
+    div.appendChild(table)
     
     // Install table to html
     const parent = document.querySelector('#dashboard')
     const breakline = document.querySelector('#dashboard > br')
-    parent.insertBefore(table, breakline)
+    parent.insertBefore(div, breakline)
 }
 
 function map_schedule () {

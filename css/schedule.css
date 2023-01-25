@@ -1,5 +1,5 @@
-#schedule-table td,
-#schedule-table th {
+#schedule-table table td,
+#schedule-table table th {
     text-align: center !important;
     vertical-align: middle !important;
 }
@@ -9,12 +9,20 @@
     white-space: nowrap;
 } */
 
-#schedule-table tr td {
+#schedule-table table tr td {
     padding: 4px;
 }
 
-#schedule-table td.disable-border {
+#schedule-table table td.disable-border {
     border-top: none;
+}
+
+#schedule-table table {
+    min-width: 900px;
+}
+
+#schedule-table {
+    overflow-x: auto;
 }
 
 .cursor-pointer {
