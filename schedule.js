@@ -47,29 +47,73 @@ let BACKGROUNDS = [
 let mapping
 
 function parse_data() {
-    const rows = [...document.querySelectorAll('#dashboard table.table-hover tbody tr')]
-    rows.slice(0, rows.length - 1)
+    let rows = [...document.querySelectorAll('#dashboard table.table-hover tbody tr')]
+    rows = rows.slice(0, -1)
     rows.forEach((el, i) => {
         const row = [...el.querySelectorAll('td')]
-        const time = row[10]?.innerText
+
+        let index,
+            code,
+            subject,
+            semester,
+            credit,
+            group,
+            lecture,
+            type,
+            room,
+            day,
+            time,
+            is_multiple = false
+        
+        if (row.length < 11) {
+            let fallback_item = data[data.length - 1]
+            fallback_item.is_multiple = true
+            index = fallback_item.index
+            code = fallback_item.code
+            subject = fallback_item.subject
+            semester = fallback_item.semester
+            credit = fallback_item.credit
+            group = row[0]?.innerText
+            lecture = row[1]?.innerText
+            type = row[2]?.innerText
+            room = row[3]?.innerText
+            day = row[4]?.innerText
+            time = row[5]?.innerText
+            is_multiple = true
+        } else {
+            index = Number(row[0]?.innerText)
+            code = row[1]?.innerText
+            subject = row[2]?.innerText
+            semester = Number(row[3]?.innerText)
+            credit = Number(row[4]?.innerText)
+            group = row[5]?.innerText
+            lecture = row[6]?.innerText
+            type = row[7]?.innerText
+            room = row[8]?.innerText
+            day = row[9]?.innerText
+            time = row[10]?.innerText
+        }
+
         let start_time, end_time
         if (time) {
             [start_time, end_time] = time.split('-').map(time => time.trim().substring(0, 5).replaceAt(4, '0'))
         }
+
         data.push({
-            index: Number(row[0]?.innerText),
-            code: row[1]?.innerText,
-            subject: row[2]?.innerText,
-            semester: Number(row[3]?.innerText),
-            credit: Number(row[4]?.innerText),
-            group: row[5]?.innerText,
-            lecture: row[6]?.innerText,
-            type: row[7]?.innerText,
-            room: row[8]?.innerText,
-            day: row[9]?.innerText,
+            index,
+            code,
+            subject,
+            semester,
+            credit,
+            group,
+            lecture,
+            type,
+            room,
+            day,
             start_time,
             end_time,
-            node: el
+            node: el,
+            is_multiple
         })
     })
 }
