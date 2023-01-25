@@ -82,15 +82,28 @@ function generate_table () {
     table.classList.add('table', 'table-bordered')
     table.style.marginTop = '12px'
 
+    const TIME_COL_WIDTH = (100 / days.length).toFixed(1) + '%'
+
     // Create table head
     const table_head = document.createElement('thead')
     const head_row = document.createElement('tr')
-    // Insert emtpy head for time column
     head_row.appendChild(document.createElement('th'))
+
+    // Create colgroup
+    const col_group = document.createElement('colgroup')
+    const time_col = document.createElement('col')
+    time_col.width = '100px'
+    col_group.appendChild(time_col)
+    table.appendChild(col_group)
+
     days.forEach(day => {
         const day_head = document.createElement('th')
         day_head.innerText = day
         head_row.appendChild(day_head)
+        
+        const col = document.createElement('col')
+        col.width = TIME_COL_WIDTH
+        col_group.appendChild(col)
     })
     table_head.appendChild(head_row)
     table.appendChild(table_head)

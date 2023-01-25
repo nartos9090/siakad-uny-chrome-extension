@@ -19,6 +19,7 @@
 
 #schedule-table table {
     min-width: 900px;
+    table-layout: fixed;
 }
 
 #schedule-table {
