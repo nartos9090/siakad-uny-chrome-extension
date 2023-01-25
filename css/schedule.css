@@ -26,6 +26,10 @@
     overflow-x: auto;
 }
 
+.schedule-item {
+    transition: 0.3s;
+}
+
 .cursor-pointer {
     cursor: pointer;
 }
