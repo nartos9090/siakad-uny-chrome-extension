@@ -23,30 +23,30 @@ let days = [
 let data = []
 
 let BACKGROUNDS = [
-    '#C5CAE9',
-    '#C8E6C9',
-    '#F8BBD0',
-    '#E1BEE7',
-    '#FFCDD2',
-    '#BBDEFB',
-    '#B3E5FC',
-    '#B2EBF2',
-    '#F0F4C3',
-    '#D7CCC8',
-    '#D1C4E9',
-    '#B2DFDB',
-    '#DCEDC8',
-    '#FFF9C4',
-    '#FFECB3',
-    '#F5F5F5',
-    '#FFCCBC',
-    '#FFE0B2',
-    '#CFD8DC',
+    ['#EF9A9A', '#FFCDD2'],
+    ['#F48FB1', '#F8BBD0'],
+    ['#CE93D8', '#E1BEE7'],
+    ['#B39DDB', '#D1C4E9'],
+    ['#9FA8DA', '#C5CAE9'],
+    ['#90CAF9', '#BBDEFB'],
+    ['#81D4FA', '#B3E5FC'],
+    ['#80DEEA', '#B2EBF2'],
+    ['#80CBC4', '#B2DFDB'],
+    ['#A5D6A7', '#C8E6C9'],
+    ['#C5E1A5', '#DCEDC8'],
+    ['#E6EE9C', '#F0F4C3'],
+    ['#FFF59D', '#FFF9C4'],
+    ['#FFE082', '#FFECB3'],
+    ['#FFCC80', '#FFE0B2'],
+    ['#FFAB91', '#FFCCBC'],
+    ['#BCAAA4', '#D7CCC8'],
+    ['#B0BEC5', '#CFD8DC'],
 ]
 
 let mapping
 
 function parse_data() {
+    data = []
     let rows = [...document.querySelectorAll('#dashboard table.table-hover tbody tr')]
     rows = rows.slice(0, -1)
     rows.forEach((el, i) => {
@@ -99,6 +99,8 @@ function parse_data() {
             [start_time, end_time] = time.split('-').map(time => time.trim().substring(0, 5).replaceAt(4, '0'))
         }
 
+        const [bg_normal, bg_hover] = BACKGROUNDS[(index - 1) % BACKGROUNDS.length]
+
         data.push({
             index,
             code,
@@ -113,7 +115,9 @@ function parse_data() {
             start_time,
             end_time,
             node: el,
-            is_multiple
+            is_multiple,
+            bg_normal,
+            bg_hover,
         })
     })
 }
@@ -177,10 +181,13 @@ function generate_table () {
                 row.appendChild(item_col)
             } else if (item !== 1) {
                 const item_col = document.createElement('td')
+                item.node_col = item_col
                 item_col.rowSpan = item.row_span
                 item_col.classList.add('schedule-item', 'cursor-pointer')
                 item_col.innerHTML = `<div>${item.subject}</div><div>${item.start_time} - ${item.end_time}</div>`
-                item_col.style.backgroundColor = BACKGROUNDS[(item.index - 1) % BACKGROUNDS.length]
+                item_col.style.backgroundColor = item.bg_normal
+                item_col.onmouseover = () => change_color(item, true)
+                item_col.onmouseleave = () => change_color(item, false)
                 item_col.onclick = () => scroll_to_element(item.node)
                 row.appendChild(item_col)
             }
@@ -191,6 +198,12 @@ function generate_table () {
     table.appendChild(table_body)
     div.appendChild(table)
     
+    // Refresh button
+    // let btn = document.createElement('button')
+    // btn.innerText = 'refresh'
+    // btn.onclick = () => refresh()
+    // div.prepend(btn)
+
     // Install table to html
     const parent = document.querySelector('#dashboard')
     const breakline = document.querySelector('#dashboard > br')
@@ -198,6 +211,7 @@ function generate_table () {
 }
 
 function map_schedule () {
+    mapping = Array(days.length).fill().map(() => Array((HOUR_END - HOUR_START) * ROW_HOUR_SCALE).fill(null))
     for (const item of data) {
         const col = days.findIndex(day => day === item.day)
         if (col < 0 || !item.start_time || !item.end_time) {
@@ -250,15 +264,25 @@ function scroll_to_element(e) {
     })
 }
 
-function init_mapping_array () {
-    mapping = Array(days.length).fill().map(() => Array((HOUR_END - HOUR_START) * ROW_HOUR_SCALE).fill(null))
-}
-
 function zero_pad(num, places) {
     return String(num).padStart(places, '0')
 }
 
-init_mapping_array()
+function change_color(item, active = false) {
+    const background = BACKGROUNDS[(item.index - 1) % BACKGROUNDS.length][active ? 1 : 0]
+    if (item.is_multiple) {
+        data.filter(v => v.index === item.index).forEach((item) => {
+            if (item.node_col) {
+                item.node_col.style.backgroundColor = background
+            }
+        })
+    } else {
+        if (item.node_col) {
+            item.node_col.style.backgroundColor = background
+        }
+    }
+}
+
 delete_previous_table()
 parse_data()
 map_schedule()
@@ -266,7 +290,6 @@ generate_table()
 
 function refresh() {
     delete_previous_table()
-    init_mapping_array()
     parse_data()
     map_schedule()
     generate_table()
