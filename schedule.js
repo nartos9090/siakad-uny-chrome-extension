@@ -119,9 +119,10 @@ function generate_table () {
             } else if (item !== 1) {
                 const item_col = document.createElement('td')
                 item_col.rowSpan = item.row_span
-                item_col.classList.add('schedule-item')
+                item_col.classList.add('schedule-item', 'cursor-pointer')
                 item_col.innerHTML = `<div>${item.subject}</div><div>${item.start_time} - ${item.end_time}</div>`
                 item_col.style.backgroundColor = BACKGROUNDS[(item.index - 1) % BACKGROUNDS.length]
+                item_col.onclick = () => scroll_to_element(item.node)
                 row.appendChild(item_col)
             }
         })
