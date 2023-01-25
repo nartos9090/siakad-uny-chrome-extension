@@ -4,10 +4,10 @@
     vertical-align: middle !important;
 }
 
-#schedule-table tr td:first-child {
+/* #schedule-table tr td:first-child {
     width: 1%;
     white-space: nowrap;
-}
+} */
 
 #schedule-table tr td {
     padding: 4px;
