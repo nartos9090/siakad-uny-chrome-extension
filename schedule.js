@@ -333,7 +333,9 @@ function change_color(item, active = false) {
 
 function print_table () {
     const el = document.querySelector('#schedule-table')
+    el.style.width = '1920px'
     html2canvas(el).then((canvas) => {
+        el.style.width = 'unset'
         const a = document.createElement('a')
         a.download = 'jadwal.png'
         a.href = canvas.toDataURL()
