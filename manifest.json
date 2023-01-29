@@ -5,8 +5,7 @@
     "content_scripts": [
         {
             "matches": ["*://siakad2013.uny.ac.id/krs/masuk"],
-            "js": ["js/html2canvas.min.js", "schedule.js"],
-            "css": ["css/schedule.css"],
+            "js": ["js/html2canvas.min.js", "js/style.js", "schedule.js"],
             "run_at": "document_end"
         }
     ],

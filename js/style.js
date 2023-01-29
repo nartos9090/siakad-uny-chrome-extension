@@ -1,5 +1,5 @@
-/* NOT USED */
-
+const style = document.createElement('style')
+style.innerHTML = `
 #schedule-table table td,
 #schedule-table table th {
     text-align: center !important;
@@ -48,3 +48,6 @@
 .cursor-pointer {
     cursor: pointer;
 }
+`
+
+document.head.appendChild(style)
