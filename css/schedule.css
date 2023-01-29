@@ -9,6 +9,10 @@
     white-space: nowrap;
 } */
 
+#schedule-table.show-room table tr td {
+    padding: 6px;
+}
+
 #schedule-table table tr td {
     padding: 4px;
 }
@@ -24,6 +28,14 @@
 
 #schedule-table {
     overflow-x: auto;
+}
+
+#schedule-table.show-room .item-room {
+    display: block;
+}
+
+#schedule-table .item-room {
+    display: none;
 }
 
 .schedule-item {
