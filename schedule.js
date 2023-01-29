@@ -159,6 +159,7 @@ function generate_util () {
     // Create save as image button
     const save = document.createElement('button')
     save.classList.add('btn', 'btn-secondary')
+    save.style.marginLeft = '12px'
     save.innerText = 'Simpan Gambar'
     save.onclick = print_table
 
