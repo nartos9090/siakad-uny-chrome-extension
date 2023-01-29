@@ -132,9 +132,11 @@ function parse_data() {
 }
 
 function generate_util () {
-    let show = false
     const div = document.createElement('div')
     div.style.display = 'flex'
+
+    // Create show/hide room button
+    let show = false
     const button = document.createElement('button')
     button.classList.add('btn', 'btn-primary')
     button.innerText = 'Tampilkan Ruangan'
@@ -153,6 +155,14 @@ function generate_util () {
     }
 
     div.appendChild(button)
+
+    // Create save as image button
+    const save = document.createElement('button')
+    save.classList.add('btn', 'btn-secondary')
+    save.innerText = 'Simpan Gambar'
+    save.onclick = print_table
+
+    div.appendChild(save)
 
     const parent = document.querySelector('#dashboard')
     const breakline = document.querySelector('#dashboard > br')
@@ -318,6 +328,16 @@ function change_color(item, active = false) {
             item.node_col.style.backgroundColor = background
         }
     }
+}
+
+function print_table () {
+    const el = document.querySelector('#schedule-table')
+    html2canvas(el).then((canvas) => {
+        const a = document.createElement('a')
+        a.download = 'jadwal.png'
+        a.href = canvas.toDataURL()
+        a.click()
+    })
 }
 
 delete_previous_table()
