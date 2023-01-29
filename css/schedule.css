@@ -15,6 +15,7 @@
 
 #schedule-table table tr td {
     padding: 4px;
+    transition: 0.3s;
 }
 
 #schedule-table table td.disable-border {
