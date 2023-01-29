@@ -61,6 +61,8 @@ function parse_data() {
             lecture,
             type,
             room,
+            room_size,
+            room_code,
             day,
             time,
             is_multiple = false
@@ -98,6 +100,11 @@ function parse_data() {
         if (time) {
             [start_time, end_time] = time.split('-').map(time => time.trim().substring(0, 5).replaceAt(4, '0'))
         }
+        if (room) {
+            room_size = Number(room.match(/(?<=size:)(.*)(?=(\s\[))/)[0])
+            room_code = room.match(/(?<=\[)(.*)(?=\])/)[0]
+            room = room.slice(0, room.indexOf(', size:'))
+        }
 
         const [bg_normal, bg_hover] = BACKGROUNDS[(index - 1) % BACKGROUNDS.length]
 
@@ -111,6 +118,8 @@ function parse_data() {
             lecture,
             type,
             room,
+            room_size,
+            room_code,
             day,
             start_time,
             end_time,
@@ -120,6 +129,34 @@ function parse_data() {
             bg_hover,
         })
     })
+}
+
+function generate_util () {
+    let show = false
+    const div = document.createElement('div')
+    div.style.display = 'flex'
+    const button = document.createElement('button')
+    button.classList.add('btn', 'btn-primary')
+    button.innerText = 'Tampilkan Ruangan'
+    button.style.marginLeft = 'auto'
+    button.onclick = function () {
+        show = !show
+        if (show) {
+            button.innerText = 'Sembunyikan Ruangan'
+            table = document.getElementById('schedule-table')
+            table?.classList.add('show-room')
+        } else {
+            button.innerText = 'Tampilkan Ruangan'
+            table = document.getElementById('schedule-table')
+            table?.classList.remove('show-room')
+        }
+    }
+
+    div.appendChild(button)
+
+    const parent = document.querySelector('#dashboard')
+    const breakline = document.querySelector('#dashboard > br')
+    parent.insertBefore(div, breakline)
 }
 
 function generate_table () {
@@ -184,7 +221,7 @@ function generate_table () {
                 item.node_col = item_col
                 item_col.rowSpan = item.row_span
                 item_col.classList.add('schedule-item', 'cursor-pointer')
-                item_col.innerHTML = `<div>${item.subject}</div><div>${item.start_time} - ${item.end_time}</div>`
+                item_col.innerHTML = `<div class="item-subject">${item.subject}</div><div class="item-time">${item.start_time} - ${item.end_time}</div><div class="item-room">${item.room}</div>`
                 item_col.style.backgroundColor = item.bg_normal
                 item_col.onmouseover = () => change_color(item, true)
                 item_col.onmouseleave = () => change_color(item, false)
@@ -286,6 +323,7 @@ function change_color(item, active = false) {
 delete_previous_table()
 parse_data()
 map_schedule()
+generate_util()
 generate_table()
 
 function refresh() {
