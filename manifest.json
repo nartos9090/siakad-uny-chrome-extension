@@ -5,7 +5,7 @@
     "content_scripts": [
         {
             "matches": ["*://siakad.uny.ac.id/dashboard"],
-            "js": ["js/html2canvas.min.js", "js/style.js", "schedule.js"],
+            "js": ["config.js", "js/html2canvas.min.js", "js/style.js", "schedule.js"],
             "run_at": "document_end"
         }
     ],
