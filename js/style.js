@@ -35,6 +35,7 @@ style.innerHTML = `
 
 #schedule-table.show-room .item-room {
     display: block;
+    color: white;
 }
 
 #schedule-table .item-room {

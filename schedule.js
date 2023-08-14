@@ -5,7 +5,7 @@ String.prototype.replaceAt = function(index, replacement) {
 let ROW_HOUR_SCALE = 6
 let MINUTES_PER_CREDIT = 50
 let HOUR_START = 7
-let HOUR_END = 18
+let HOUR_END = 21
 
 let CREDIT_TO_SCALE = MINUTES_PER_CREDIT / (60 / ROW_HOUR_SCALE)
 
@@ -47,8 +47,7 @@ let mapping
 
 function parse_data() {
     data = []
-    let rows = [...document.querySelectorAll('#dashboard table.table-hover tbody tr')]
-    rows = rows.slice(0, -1)
+    let rows = [...document.querySelectorAll('.col-lg-12 > .panel.panel-danger > .panel-body > table > tbody > tr')]
     rows.forEach((el, i) => {
         const row = [...el.querySelectorAll('td')]
 
@@ -65,9 +64,10 @@ function parse_data() {
             room_code,
             day,
             time,
+            // is_online,
             is_multiple = false
         
-        if (row.length < 11) {
+        if (row.length < 12) {
             let fallback_item = data[data.length - 1]
             fallback_item.is_multiple = true
             index = fallback_item.index
@@ -121,8 +121,8 @@ function parse_data() {
             room_size,
             room_code,
             day,
-            start_time,
-            end_time,
+            start_time: start_time !== '0' ? start_time : null,
+            end_time: end_time !== '0' ? end_time : null,
             node: el,
             is_multiple,
             bg_normal,
@@ -165,9 +165,9 @@ function generate_util () {
 
     div.appendChild(save)
 
-    const parent = document.querySelector('#dashboard')
-    const breakline = document.querySelector('#dashboard > br')
-    parent.insertBefore(div, breakline)
+    const parent = document.querySelector('#schedule-panel-body')
+    const schedule_table = document.querySelector('#schedule-panel-body > #schedule-table')
+    parent.insertBefore(div, schedule_table)
 }
 
 function generate_table () {
@@ -245,7 +245,22 @@ function generate_table () {
 
     table.appendChild(table_body)
     div.appendChild(table)
-    
+
+    const panel = document.createElement('div')
+    panel.className = 'panel panel-warning'
+
+    const panel_heading = document.createElement('div')
+    panel_heading.className = 'panel-heading'
+    panel_heading.innerHTML = '<i class="fa fa-xing"></i> Jadwal Kuliah'
+
+    const panel_body = document.createElement('div')
+    panel_body.className = 'panel-body'
+    panel_body.id = 'schedule-panel-body'
+
+    panel_body.appendChild(div)
+    panel.appendChild(panel_heading)
+    panel.appendChild(panel_body)
+
     // Refresh button
     // let btn = document.createElement('button')
     // btn.innerText = 'refresh'
@@ -253,9 +268,9 @@ function generate_table () {
     // div.prepend(btn)
 
     // Install table to html
-    const parent = document.querySelector('#dashboard')
-    const breakline = document.querySelector('#dashboard > br')
-    parent.insertBefore(div, breakline)
+    const parent = document.querySelector('#page-wrapper > div > div > div > div > div.col-lg-12')
+    const breakline = document.querySelector('#page-wrapper > div > div > div > div > div.col-lg-12 > div.panel.panel-danger')
+    parent.insertBefore(panel, breakline)
 }
 
 function map_schedule () {
@@ -346,8 +361,8 @@ function print_table () {
 delete_previous_table()
 parse_data()
 map_schedule()
-generate_util()
 generate_table()
+generate_util()
 
 function refresh() {
     delete_previous_table()
