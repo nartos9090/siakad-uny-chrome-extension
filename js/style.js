@@ -49,6 +49,16 @@ style.innerHTML = `
 .cursor-pointer {
     cursor: pointer;
 }
+
+#schedule-table > table > tbody > tr:nth-child(6n) > td,
+#schedule-table > table > tbody > tr td[rowspan="${ROW_HOUR_SCALE}"] {
+    border-bottom-width: 2px;
+}
+
+#schedule-table > table > tbody > tr:not(:nth-child(6n)) > td:not([rowspan="6"]) {
+    border-top: none;
+    border-bottom: none;
+}
 `
 
 document.head.appendChild(style)
