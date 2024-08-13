@@ -59,7 +59,18 @@ function parse_data() {
 
         let start_time, end_time
         if (time) {
-            [start_time, end_time] = time.split('-').map(time => time.trim().substring(0, 5).replaceAt(4, '0'))
+            [start_time, end_time] = time.split('-').map(time => {
+                let [hours, minutes] = time.trim().substring(0, 5).split(':').map(Number)
+
+                minutes = Math.round(minutes / 10) * 10
+
+                if (minutes === 60) {
+                    hours++
+                    minutes = 0
+                }
+
+                return zero_pad(hours, 2) + ':' + zero_pad(minutes, 2)
+            })
         }
         if (room) {
             room_size = Number(room.match(/(?<=size:)(.*)(?=(\s\[))/)[0])
@@ -174,7 +185,7 @@ function generate_table () {
         // Time column
         if (i % ROW_HOUR_SCALE === 0) {
             const time_col = document.createElement('td')
-            const hour = HOUR_START + Math.floor(i / ROW_HOUR_SCALE)
+            const hour = HOUR_START + Math.round(i / ROW_HOUR_SCALE)
             time_col.innerText = `${zero_pad(hour, 2)}:00 - ${zero_pad(hour + 1, 2)}:00`
             time_col.rowSpan = ROW_HOUR_SCALE
             row.appendChild(time_col)
