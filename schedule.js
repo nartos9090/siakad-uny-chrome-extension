@@ -28,7 +28,7 @@ function parse_data() {
             // is_online,
             is_multiple = false
         
-        if (row.length < 12) {
+        if (row.length === 6) {
             let fallback_item = data[data.length - 1]
             fallback_item.is_multiple = true
             index = fallback_item.index
